@@ -1,0 +1,65 @@
+		.MODEL LARGE
+		.STACK 100h
+		.DATA
+	X DW ?
+	Y DW ?
+	A1X DW ?
+		.CODE
+		
+	_solvei PROC FAR
+		PUBLIC _solvei
+		
+		PUSH BP
+		MOV BP,SP
+		PUSH ES
+		MOV X,0
+		JMP CHECK_LOOP1 
+START_LOOP1: 
+		MOV Y,0 
+		JMP CHECK_LOOP2 
+START_LOOP2:
+		INC Y
+CHECK_LOOP2: 
+		MOV AX,[BP+16] 
+		MUL Y
+		ADD AX,A1X 
+		CMP AX,[BP+18] ; ax = a1*x + b1*y
+		JB START_LOOP2 
+		JNE SUMS_NOT_EQ
+		MOV AX,[BP+20]
+		MUL X 
+		PUSH AX 
+		MOV AX,[BP+22]
+		MUL Y
+		ADD AX,[BP-4]
+		ADD SP,2
+		CMP AX,[BP+24]
+		JNE SUMS_NOT_EQ
+		
+		MOV BX,[BP+6]
+		MOV ES,[BP+8]
+		MOV AX,X
+		MOV ES:[BX],AX 
+		MOV BX,[BP+10]
+		MOV ES,[BP+12]
+		MOV AX,Y
+		MOV ES:[BX],AX
+		MOV AX,1
+		JMP ENDING
+SUMS_NOT_EQ:
+		INC X
+CHECK_LOOP1:
+		MOV AX,[BP+14]
+		MUL X
+		MOV A1X,AX 
+		CMP AX,[BP+18]
+		JBE START_LOOP1
+		
+		MOV AX,0
+ENDING:
+		POP ES 
+		POP BP 
+		RET
+	_solvei ENDP
+		END
+		

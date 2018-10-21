@@ -1,0 +1,28 @@
+;work with unsign number
+	.MODEL SMALL
+	.STACK 100h
+	.DATA
+		.DATA
+		N DB 4
+		ARR1 DB 4 DUP(0)
+		ARR2 DB 4 DUP(0)
+	.CODE
+start:
+	MOV AX,@DATA
+	MOV DS,AX
+	MOV ARR1, 8
+	MOV ARR1[1], 6
+	MOV ARR1[2], 4
+	MOV ARR1[3], 2
+	MOV AH,8
+	ADD AH,'0'
+	MOV ARR2,AH
+	SUB AH,2
+	MOV ARR2[1],AH
+	SUB AH,2
+	MOV ARR2[2],AH
+	SUB AH,2
+	MOV ARR2[3],AH 
+	MOV AH,4Ch
+	INT 21h
+	END start

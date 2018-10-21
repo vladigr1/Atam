@@ -1,0 +1,32 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA
+		.CODE
+		.386
+		
+	_compare PROC NEAR
+		PUBLIC _compare
+		PUSH BP
+		MOV BP,SP
+		MOV EAX,[BP+4]
+		CMP EAX,[BP+8]
+		MOV BX,[BP+12]
+		MOV WORD PTR [BX],1
+		JE IS_EQ
+		MOV WORD PTR [BX],0
+IS_EQ:
+		MOV BX,[BP+16]
+		MOV WORD PTR [BX],1
+		JA IS_A
+		MOV WORD PTR [BX],0
+IS_A:
+		MOV BX,[BP+14]
+		MOV WORD PTR [BX],1
+		JG ENDING
+		MOV WORD PTR [BX],0
+ENDING:
+		POP BP
+		RET
+	_compare ENDP
+		END
+		

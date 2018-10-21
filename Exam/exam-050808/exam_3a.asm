@@ -1,0 +1,87 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA
+	X DD ?
+	Y DD ?
+	X1 DD ?
+	Y1 DD ?
+	FX1 DD ?
+	FY1 DD ?
+		.CODE
+		.386
+		.387
+	
+		
+	_fsection PROC NEAR
+		PUBLIC _fsection
+		EXTRN _f_func :NEAR
+		
+		PUSH BP
+		MOV BP,SP
+		FLD DWORD PTR [BP+4]
+		FSTP X
+		FLD DWORD PTR [BP+8]
+		FSTP Y
+		JMP CHECK_LOOP
+START_LOOP:
+		FLD Y 
+		FSUB X
+		FLD1
+		FADD ST,ST
+		FADD ST,ST
+		FDIV
+		FADD X
+		FST X1
+		FSUB X
+		FLD Y
+		FSUBR
+		FSTP Y1
+		
+		FLD X1
+		SUB SP,4
+		FSTP DWORD PTR [BP-4]
+		CALL _f_func
+		ADD SP,4
+		FSTP FX1
+		
+		FLD Y1
+		SUB SP,4
+		FSTP DWORD PTR [BP-4]
+		CALL _f_func
+		ADD SP,4
+		FSTP FY1
+		
+		FLD FX1 
+		FLD FY1 
+		FCOMPP
+		FSTSW AX
+		SAHF 
+		JNB NOT_BE
+		FLD X1
+		FSTP X 
+		JMP CHECK_LOOP
+NOT_BE:
+		FLD Y1
+		FSTP Y 
+		
+CHECK_LOOP:
+		FLD Y 
+		FSUB X 
+		FLD DWORD PTR [BP+12]
+		FCOMPP 
+		FSTSW AX
+		SAHF 
+		JB START_LOOP
+		
+		FLD X 
+		FADD Y 
+		FLD1
+		FADD ST,ST 
+		FDIV 
+		
+		POP BP 
+		RET 
+	_fsection ENDP
+		END
+		
+		

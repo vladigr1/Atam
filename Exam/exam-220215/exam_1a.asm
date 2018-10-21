@@ -1,0 +1,89 @@
+		.MODEL SMALL 
+		.STACK 100h
+		.DATA
+	RES DD ?
+	K DW ?
+	RTN DW ?
+		.CODE
+		.386
+	_max_k PROC NEAR
+		PUBLIC _max_k
+		PUSH BP
+		MOV BP,SP
+		MOV RES,1 
+		MOV K,0 
+START_LOOP1:
+		INC K 
+		MOV EAX,RES
+		MOV EBX,0
+		MOV BX,[BP+4]
+		MUL EBX 
+		MOV RES,EAX 
+CHECK_LOOP1:
+		JNO START_LOOP1
+		
+		MOV AX,K 
+		POP BP 
+		RET 
+	_max_k ENDP
+	
+	_check_solution PROC NEAR 
+		PUBLIC _check_solution
+		PUSH BP 
+		MOV BP,SP 
+		MOV RES,1 
+		MOV CX,[BP+6]
+START_LOOP2:
+		MOV EAX,RES 
+		MOV EBX,0
+		MOV BX,[BP+4]
+		MUL EBX 
+		MOV RES,EAX 
+		LOOP START_LOOP2 
+		
+		MOV EDX,0
+		MOV EAX,RES 
+		MOV EBX,0
+		MOV BX,[BP+8]
+		DIV EBX
+		MOV AX,1
+		CMP DX,[BP+10]
+		JE ENDING
+		NEG AX  
+ENDING:
+		POP BP 
+		RET 
+	_check_solution ENDP
+	
+	_search_solution PROC NEAR 
+		PUBLIC _search_solution
+		PUSH BP
+		MOV BP,SP
+		MOV RTN,1
+		NEG RTN 
+		PUSH WORD PTR [BP+4]
+		CALL _max_k
+		ADD SP,2 
+		MOV CX,AX 
+START_LOOP3:
+		PUSH CX
+		PUSH WORD PTR [BP+8] 
+		PUSH WORD PTR [BP+6]
+		PUSH CX 
+		PUSH WORD PTR [BP+4]
+		CALL _check_solution
+		ADD SP,8 
+		POP CX
+		CMP AX,1
+		JNE CHECK_LOOP3
+		MOV RTN,CX	
+CHECK_LOOP3:
+		LOOP START_LOOP3
+		
+		MOV AX,RTN 
+		POP BP 
+		RET 
+	_search_solution ENDP 
+		END 
+		
+		

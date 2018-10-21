@@ -1,0 +1,33 @@
+		.MODEL LARGE
+		.STACK 100h
+		.DATA
+		.CODE
+		
+	_get_regs PROC FAR
+		PUBLIC  _get_regs
+		PUSH BP
+		MOV BP,SP
+		PUSH ES
+		MOV BX,[BP+6]
+		MOV ES,[BP+8]
+		MOV AX,[BP+2]
+		MOV ES:[BX],AX
+		MOV BX,[BP+10]
+		MOV ES,[BP+12]
+		MOV AX,SP
+		ADD AX,24
+		MOV ES:[BX],AX
+		MOV BX,[BP+14]
+		MOV ES,[BP+16]
+		MOV AX,[BP+4]
+		MOV ES:[BX],AX
+		MOV BX,[BP+18]
+		MOV ES,[BP+20]
+		MOV AX,[BP]
+		MOV ES:[BX],AX
+		POP ES
+		POP BP
+		RET
+	_get_regs ENDP
+		END
+		

@@ -1,0 +1,70 @@
+		.MODEL LARGE
+		.STACK 100h
+		.DATA 
+	I DW ?
+	J DW ?
+	COUNT DW ?
+		.CODE
+		.386
+	_position_sort PROC FAR
+		PUBLIC _position_sort
+		PUSH BP
+		MOV BP,SP 
+		PUSH SI
+		PUSH DI
+		PUSH ES 
+		PUSH FS 
+		MOV ES,[BP+8]
+		MOV FS,[BP+14]
+		MOV BX,[BP+6]
+		mov EDI,0
+		MOV DI,[BP+12]
+		MOV I,0
+		JMP CHECK_LOOP1
+START_LOOP1:
+		MOV COUNT,0 
+		MOV J,0
+		MOV SI,[BP+6]
+		JMP CHECK_LOOP2
+START_LOOP2:
+		MOV EAX,ES:[SI]
+		CMP EAX,ES:[BX]
+		JL START_IF
+		JNE END_IF
+		MOV AX,J 
+		CMP AX,I
+		JNL END_IF 
+START_IF:
+		INC COUNT
+END_IF:
+		INC J 
+		ADD SI,4
+CHECK_LOOP2:
+		MOV AX,[BP+10]
+		CMP J,AX 
+		JB START_LOOP2
+		
+		MOV ECX,0
+		MOV CX,COUNT 
+		SHL ECX,2
+		MOV EAX,ES:[BX]
+		MOV FS:[EDI+ECX],EAX
+		
+		INC I 
+		ADD BX,4 
+CHECK_LOOP1:
+		MOV AX,[BP+10]
+		CMP I,AX 
+		JB START_LOOP1
+		
+		POP FS 
+		POP ES
+		POP DI
+		POP SI 
+		POP BP
+		RET 
+	_position_sort ENDP
+		END
+		
+		
+		

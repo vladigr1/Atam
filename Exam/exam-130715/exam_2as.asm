@@ -1,0 +1,55 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA 
+	CARRY DB ?
+	INTARR1 DB ?
+	INTARR2 DB ?
+	I DB ?
+	TEN DB 10
+		.CODE
+		
+	_string_add PROC NEAR
+		PUBLIC _string_add
+		PUSH BP
+		MOV BP,SP
+		PUSH SI 
+		PUSH DI 
+		MOV CARRY,0
+		MOV AX,[BP+10]
+		DEC AX 
+		MOV I,Al
+		MOV BX,[BP+6] 
+		MOV SI,[BP+8]
+		MOV DI,[BP+4]
+		ADD BX,AX 
+		ADD SI,AX 
+		ADD DI,AX 
+		JMP CHECK_LOOP
+START_LOOP:
+		MOV AH,[BX]
+		SUB AH,'0'
+		MOV INTARR1,AH 
+		MOV AL,[SI]
+		SUB AL,'0'
+		MOV INTARR2,AL 
+		ADD AL,INTARR1 
+		ADD AL,CARRY 
+		MOV AH,0 
+		DIV TEN
+		MOV CARRY,AL 
+		ADD AH,'0'
+		MOV [DI],AH 
+		DEC BX 
+		DEC SI 
+		DEC DI 
+		DEC I 
+CHECK_LOOP:
+		CMP I,0 
+		JGE START_LOOP
+		
+		POP DI
+		POP SI 
+		POP BP 
+		RET 
+	_string_add ENDP
+		END

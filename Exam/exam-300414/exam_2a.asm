@@ -1,0 +1,75 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA
+	MAX DD ?
+	I DW ?
+		.CODE
+		.386
+		
+	_update PROC NEAR
+		PUBLIC _update 
+		PUSH BP 
+		MOV BP,SP 
+		PUSH SI 
+		MOV MAX,0
+		MOV BX,[BP+10]
+		MOV SI,[BP+8]
+		MOV AX,[BP+4]
+		MOV AX,[BP+4]
+		MOV I,AX 
+		CMP AX,0
+		JE I_EQZ
+		DEC AX
+		SHL AX,2 
+		ADD BX,AX 
+		MOV EAX,[BX] 
+		MOV MAX,EAX 
+I_EQZ:
+		MOV AX,I 
+		SHL AX,2 
+		ADD SI,AX 
+		MOV BX,[BP+10]
+		ADD BX,AX
+		JMP CHECK_LOOP
+START_LOOP:
+		MOV EAX,[SI]
+		CMP MAX,EAX 
+		JNB MAX_HIGHER
+		MOV MAX,EAX 
+MAX_HIGHER:
+		MOV EAX,MAX 
+		MOV [BX],EAX
+		INC I 
+		ADD EBX,4
+		ADD SI,4
+CHECK_LOOP:
+		MOV AX,[BP+6] 
+		CMP I,AX 
+		JB START_LOOP
+		
+		POP SI 
+		POP BP 
+		RET
+	_update ENDP
+	
+	_set PROC NEAR 
+		PUBLIC _set	
+		PUSH BP 
+		MOV BP,SP 
+		MOV BX,[BP+12]
+		MOV AX,[BP+8]
+		SHL AX,2 
+		ADD BX,AX 
+		MOV EAX,[BP+4]
+		MOV [BX],EAX 
+		PUSH WORD PTR [BP+14]
+		PUSH WORD PTR [BP+12]
+		PUSH WORD PTR [BP+10]
+		PUSH WORD PTR [BP+8]
+		CALL _update
+		ADD SP,8 
+		POP BP 
+		RET 
+		_set ENDP 
+		END
+		

@@ -1,0 +1,36 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA
+	EXP DW 1
+	TWO DW 2
+		.CODE
+		.386
+		.387
+		
+	_fmul_pow2 PROC NEAR
+		PUBLIC _fmul_pow2
+		
+		PUSH BP 
+		MOV BP,SP
+		MOV CX,[BP+6]
+		JCXZ END_LOOP
+START_LOOP:
+		MOV AX,EXP
+		CWD
+		IMUL TWO
+		MOV EXP,AX
+CHECK_LOOP:
+		LOOP START_LOOP
+END_LOOP:
+		FILD EXP 
+		MOV BX,[BP+4]
+		FMUL DWORD PTR [BX]
+		FSTP DWORD PTR [BX]
+		
+		POP BP
+		RET
+	_fmul_pow2 ENDP
+	
+		END
+
+		

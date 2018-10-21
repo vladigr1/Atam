@@ -1,0 +1,93 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA
+	TEN DD 10
+	TENB DB 10
+		.CODE
+		.386
+
+;		
+;extern void INT64tostr(	char str[],	INT64 *ptr );
+;							[BP+4]		[BP+6]
+;										
+	_INT64tostr PROC NEAR
+		PUBLIC _INT64tostr
+		
+		PUSH BP
+		MOV BP,SP
+		PUSH DI
+		MOV BX,[BP+6]
+		MOV EAX,[BX]
+		MOV EDX,[BX+4]
+		MOV DI,[BP+4]
+		ADD DI,19
+		MOV BYTE PTR [DI],0
+		DEC DI
+		MOV CX,19
+STRT_LOOP:			;FOR LOOP
+		PUSH EDX
+		MOV EDX,0
+		DIV TEN
+		MOV BL,DL
+		POP EDX
+		PUSH EAX	;EAX FIRST
+		MOV EAX,EDX
+		MOV EDX,0
+		DIV TEN
+		PUSH EAX	;EDX FIRST	
+		MOV EAX,0
+		DIV TEN
+		PUSH EAX	;EDX DIV RES THAT EAX NOW
+		ADD BL,DL
+		MOV EAX,0
+		MOV AL,BL
+		DIV TENB
+		ADD AH,'0'
+		MOV [DI],AH
+		DEC DI
+		MOV AH,0
+		POP EDX
+		ADD EAX,EDX
+		POP EDX
+		ADC EDX,0
+		POP EBX
+		ADD EAX,EBX
+		ADC EDX,0
+CHCK_STRT_LOOP:
+		LOOP STRT_LOOP
+		
+		POP DI
+		POP BP
+		RET
+	_INT64tostr ENDP
+		
+		
+;		
+;extern void addINT64( INT64 ptr3,  INT64 ptr1,	INT64 ptr2 );
+;							[BP+4]		[BP+6]	[BP+8]		
+	_addINT64 PROC NEAR
+		PUBLIC _addINT64
+		
+		PUSH BP
+		MOV BP,SP
+		PUSH BX
+		PUSH SI
+		PUSH DI
+		MOV BX,[BP+4]
+		MOV SI,[BP+6]
+		MOV DI,[BP+8]
+		MOV EAX,[SI]
+		ADD EAX,[DI]
+		MOV [BX],EAX
+		MOV EDX,[SI+4]
+		ADC EDX,[DI+4]
+		;JC 		;IN CASE OF OVER FLOW WE CANT CREATE PRINT DIDNT MENCHINE
+		MOV [BX+4],EDX
+		POP DI
+		POP SI
+		POP BX
+		POP BP
+		RET
+	_addINT64 ENDP
+		END
+		

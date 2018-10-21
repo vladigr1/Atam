@@ -1,0 +1,35 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA
+	TEN DW 10
+	HUN DW 100
+		.CODE
+	
+		MOV AX,@DATA
+		MOV DS, AX
+	
+		MOV BX, 5
+		XOR DX, DX
+		MOV AX, 17
+		DIV BX
+		
+		MOV BX, -5
+		XOR DX, DX
+		MOV AX, 17
+		IDIV BX
+		
+		MOV DX,0Ah			;	DX:AX / AX
+		MOV AX,1220h		;660,000
+		DIV HUN				;
+		
+		MOV DX,0Ah			;	DX:AX / AX
+		MOV AX,1220h		;660,000
+		DIV TEN
+		
+		MOV AH,2h
+		MOV DL,'0'
+		INT 21h
+	
+		MOV AH, 4Ch
+		INT 21h
+		END

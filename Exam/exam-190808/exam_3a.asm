@@ -1,0 +1,62 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA
+	TWO DT 2.0
+	I DT ?
+	T DT ?
+		.CODE	
+		.386
+		.387
+		
+	_ld_trapezoid PROC NEAR
+		PUBLIC _ld_trapezoid
+		EXTRN _ldf :NEAR
+		
+		PUSH BP
+		MOV BP,SP
+		FLD TBYTE PTR [BP+4]
+		SUB SP,10
+		FSTP TBYTE PTR [BP-10] 
+		CALL _ldf
+		ADD SP,10
+		FLD TBYTE PTR [BP+14]
+		SUB SP,10
+		FSTP TBYTE PTR [BP-10] 
+		CALL _ldf
+		ADD SP,10
+		FADD
+		FLD TWO
+		FMUL
+		FSTP I
+		FLD TBYTE PTR [BP+4]
+		FSTP T
+		JMP CHECK_LOOP
+START_LOOP:
+		FLD T 
+		FLD TBYTE PTR [BP+24]
+		FADD
+		FSTP T 
+		FLD I
+		FLD T
+		SUB SP,10
+		FSTP TBYTE PTR [BP-10]
+		CALL _ldf
+		ADD SP,10
+		FADD
+		FSTP I
+CHECK_LOOP:
+		FLD TBYTE PTR [BP+14]
+		FLD T 
+		FCOMPP
+		FSTSW AX
+		SAHF
+		JB START_LOOP
+		
+		FLD I
+		FLD TBYTE PTR [BP+24]
+		FMUL
+		
+		POP BP
+		RET
+	_ld_trapezoid ENDP
+		END

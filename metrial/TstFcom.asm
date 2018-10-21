@@ -1,0 +1,22 @@
+		.MODEL SMALL
+		.STACK 100h
+		.DATA
+	FL1 DQ 3.5
+	FL2 DQ 2.0
+		.CODE
+		.386
+		.387
+		MOV AX,@DATA
+		MOV DS,AX
+		FLD FL1
+		FLD FL2						;ST(0) _ ST(1)
+		FCOMPP		;FREE THE STACK, FL2 < FL1
+		FSTSW AX
+		SAHF
+		JB ENDING	;THE UNSIGN jump will work
+		MOV AX,0
+ENDING:
+		MOV AH,4Ch
+		INT 21h
+		END
+		
